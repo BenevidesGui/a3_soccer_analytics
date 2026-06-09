@@ -6,54 +6,39 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class SoccerClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
-
     private final String BASE_URL = "https://v3.football.api-sports.io";
     private final String API_KEY = "53b648155e3987196c57e6721c541fa2";
 
-    // ⚽ Artilheiros
     public String getTopScorers(int league, int season) {
-
         String url = BASE_URL + "/players/topscorers?league=" + league + "&season=" + season;
-
         return makeRequest(url);
     }
 
-    // 🛡️ Times por liga
     public String getTeamsByLeague(int league, int season, String name) {
-
         String url = BASE_URL + "/teams?league=" + league + "&season=" + season;
-
         if (name != null && !name.isBlank()) {
             url += "&name=" + name;
         }
-
         return makeRequest(url);
     }
 
-    // 👤 Jogadores por time
     public String getPlayersByTeam(int teamId, int season) {
-
         String url = BASE_URL + "/players?team=" + teamId + "&season=" + season;
-
         return makeRequest(url);
     }
 
-    public String getLeagues(Integer teamId, Integer season, List<String> code) {
-
+    public String getLeagues(Integer LeagueId, Integer season, List<String> code) {
         StringBuilder url = new StringBuilder(BASE_URL + "/leagues?");
-
         boolean hasParam = false;
 
-        if (teamId != null) {
-            url.append("team=").append(teamId);
+        if (LeagueId != null) {
+            url.append("id=").append(LeagueId);
             hasParam = true;
         }
 

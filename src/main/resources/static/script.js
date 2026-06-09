@@ -3,69 +3,77 @@ console.log("🔥 PROVA 1: script.js FOI CARREGADO");
 document.addEventListener("DOMContentLoaded", function () {
 
     const goals = window.goalsData || {};
+    const avgGoals = window.averageGoals || {};
 
     const labels = Object.keys(goals);
-    const values = Object.values(goals);
+    const goalsValues = Object.values(goals);
+    const avgValues = Object.values(avgGoals);
 
-    const canvas = document.getElementById('goalsChart');
+    const goalsCanvas = document.getElementById('goalsChart');
+    const avgCanvas = document.getElementById('avgGoalsChart');
 
-    if (!canvas) {
-        console.error("❌ Canvas 'goalsChart' não encontrado");
+    console.log("GOALS:", window.goalsData);
+    console.log("AVG:", window.averageGoals);
+
+    if (!goalsCanvas || !avgCanvas) {
+        console.error("❌ Canvas não encontrado");
         return;
     }
 
-    new Chart(canvas, {
+    // =========================
+    // 1. GOLS POR LIGA
+    // =========================
+    new Chart(goalsCanvas, {
         type: 'bar',
         data: {
             labels: labels,
             datasets: [{
                 label: 'Gols por Liga',
-                data: values,
+                data: goalsValues,
                 backgroundColor: 'rgba(255, 107, 53, 0.6)',
                 borderColor: 'rgba(255, 107, 53, 1)',
                 borderWidth: 1,
-                borderRadius: 5,
-                borderSkipped: false,
+                borderRadius: 5
             }]
         },
         options: {
-            backgroundColor: '#2c2c2c',
             responsive: true,
             plugins: {
-                legend: {
-                    display: true,
-                    labels: {
-                        color: '#fff',
-                        font: {
-                            size: 14
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff'
-                }
+                legend: { labels: { color: '#fff' } }
             },
             scales: {
+                x: { ticks: { color: '#fff' } },
+                y: { ticks: { color: '#fff' }, beginAtZero: true }
+            }
+        }
+    });
+
+    // =========================
+    // 2. MÉDIA DE GOLS POR JOGO
+    // =========================
+    new Chart(avgCanvas, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Média de Gols por Partida',
+                data: avgValues,
+                backgroundColor: 'rgba(0, 200, 83, 0.6)',
+                borderColor: 'rgba(0, 200, 83, 1)',
+                borderWidth: 1,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { labels: { color: '#fff' } }
+            },
+            scales: {
+                x: { ticks: { color: '#fff' } },
                 y: {
-                    beginAtZero: true,
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#fff',
-                        stepSize: 200,
-                        max: 2000
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#fff'
-                    }
+                    ticks: { color: '#fff' },
+                    beginAtZero: true
                 }
             }
         }

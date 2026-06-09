@@ -1,5 +1,6 @@
 package com.a3_soccer.config;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.CacheManager;
@@ -13,13 +14,11 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-
         cacheManager.setCaffeine(
-                com.github.benmanes.caffeine.cache.Caffeine.newBuilder()
+                Caffeine.newBuilder()
                         .maximumSize(100)
                         .expireAfterWrite(2, java.util.concurrent.TimeUnit.HOURS)
         );
-
         return cacheManager;
     }
 }

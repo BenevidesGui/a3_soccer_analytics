@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Year;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ public class SoccerController {
 
     private final SoccerClient client;
 
-    // ✅ Injeção por construtor (melhor prática)
     public SoccerController(SoccerClient client) {
         this.client = client;
     }
@@ -28,30 +26,22 @@ public class SoccerController {
     @Autowired
     private AnalyticsService analyticsService;
 
-    // ⚽ Artilheiros
     @GetMapping("/scorers")
     public ResponseEntity<String> getScorers() {
         return ResponseEntity.ok(client.getTopScorers(71, 2023));
     }
 
-    // 🛡️ Times
     @GetMapping("/teams")
     public ResponseEntity<?> getTeams(
             @RequestParam String league,
             @RequestParam(required = false) Integer season,
             @RequestParam(required = false) String name
     ) {
-
         Ligas liga = Ligas.fromString(league);
-
         int currentSeason = (season != null) ? season : 2026;
-
-        return ResponseEntity.ok(
-                client.getTeamsByLeague(liga.getId(), currentSeason, name)
-        );
+        return ResponseEntity.ok(client.getTeamsByLeague(liga.getId(), currentSeason, name));
     }
 
-    // 🏆 Ligas
     @GetMapping("/leagues")
     public ResponseEntity<String> getLeagues(
             @RequestParam(required = false) Integer id,
@@ -63,17 +53,14 @@ public class SoccerController {
 
     @GetMapping("/test-fixtures")
     public ResponseEntity<String> testFixtures() {
-        return ResponseEntity.ok(client.getFixtures(39, 2024)); // Premier League
+        return ResponseEntity.ok(client.getFixtures(39, 2024));
     }
 
     @GetMapping("/analytics/goals")
-    public Map<String, Integer> getGoals(
-            @RequestParam(required = false) Integer season
-    ) {
+    public Map<String, Long> getGoals(@RequestParam(required = false) Integer season) {
         return analyticsService.getGoalsByLeague(season);
     }
 
-    // 👤 Jogadores por time
     @GetMapping("/players")
     public ResponseEntity<String> getPlayers() {
         return ResponseEntity.ok(client.getPlayersByTeam(127, 2023));

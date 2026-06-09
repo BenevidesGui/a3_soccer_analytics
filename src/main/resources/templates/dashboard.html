@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>A3-Soccer</title>
-    <link rel="icon" type="image/png" href="/images/img5.png">
+    <link rel="icon" type="image/png" href="/imagens/img5.png">
 
     <link rel="stylesheet" th:href="@{/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -11,7 +11,11 @@
 <body>
 
 <header class="header">
-        <h1><img src="/images/img5.png" style="width: 100px; height: 100px; vertical-align: middle; margin-right: 10px;"> Soccer Analytics Dashboard</h1>
+    <h1>
+        <img src="/imagens/img5.png"
+             style="width: 100px; height: 100px; vertical-align: middle; margin-right: 10px;">
+        Soccer Analytics Dashboard
+    </h1>
 </header>
 
 <main>
@@ -19,41 +23,80 @@
     <h2>Temporada: <span th:text="${season}"></span></h2>
 
     <form method="get" action="/dashboard">
-        <input type="number" name="season" placeholder="Ano" min="2020" max="2024">
+        <input type="number" name="season" th:value="${season}" min="2020" max="2024">
         <button type="submit">Trocar</button>
     </form>
 
+    <!-- CARDS -->
     <div class="container">
 
         <div class="card"
              th:each="card : ${cards}"
              th:onclick="'window.location.href=\'/teams?league=' + ${card.id} + '&season=' + ${season} + '\''">
 
-            <img th:src="${card.logo}" alt="Liga">
+            <img th:src="@{'/imagens/' + ${card.id} + '.png'}" alt="Logo da Liga">
             <h3 th:text="${card.name}"></h3>
 
         </div>
 
     </div>
 
+    <!-- ANALYTICS -->
     <div class="analytics">
         <h2>Análises da Temporada</h2>
     </div>
 
+    <!-- WRAPPER DOS GRÁFICOS + TABELA -->
+    <div class="charts-wrapper">
 
-    <div class="chart-container">
-        <canvas id="goalsChart"></canvas>
+        <!-- GRÁFICO 1 -->
+        <div class="chart-container">
+            <canvas id="goalsChart"></canvas>
+        </div>
+
+        <!-- GRÁFICO 2 -->
+        <div class="chart-container">
+            <canvas id="avgGoalsChart"></canvas>
+        </div>
+
+        <!-- ⭐ TABELA MELHORES JOGADORES -->
+        <div class="chart-container">
+
+            <h3 style="margin-bottom: 15px;">🏆 Melhores Jogadores</h3>
+
+            <table style="width:100%; color:white; text-align:left;">
+                <thead>
+                <tr>
+                    <th>Liga</th>
+                    <th>Jogador</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="entry : ${bestPlayers}">
+                    <td th:text="${entry.key}"></td>
+                    <td th:text="${entry.value}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
     </div>
-
 
     <script th:inline="javascript">
         window.goalsData = /*[[${goals}]]*/ {};
+        window.averageGoals = /*[[${averageGoals}]]*/ {};
+        window.bestPlayers = /*[[${bestPlayers}]]*/ {};
 
-        console.log("🔥 FRONT DATA:");
+        console.log("🔥 DATA:");
         console.log(window.goalsData);
+        console.log(window.averageGoals);
+        console.log(window.bestPlayers);
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script th:src="@{/script.js}"></script>
 
 </main>
